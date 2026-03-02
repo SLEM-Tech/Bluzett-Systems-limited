@@ -100,7 +100,7 @@ const Footer = () => {
 			<div className='max-w-[1440px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16'>
 				{/* Brand Column */}
 				<div className='lg:col-span-4 space-y-6'>
-					<LogoImage className='!w-[40px] brightness-200' />
+					<LogoImage className='w-10 lg:w-14 brightness-200' />
 					<p className='text-zinc-500 text-sm leading-relaxed max-w-xs'>
 						Providing complete hardware solutions for professionals, gamers, and
 						digital creators. Your performance is our priority.

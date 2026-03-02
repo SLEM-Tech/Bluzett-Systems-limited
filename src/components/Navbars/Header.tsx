@@ -100,7 +100,7 @@ const Header = () => {
 				<div className='hidden slg:grid grid-cols-12 items-center w-full py-4 max-w-[1540px] px-10 mx-auto gap-4'>
 					{/* 1. Logo Section */}
 					<div className='col-span-2 flex items-center'>
-						<LogoImage className='!w-[42px] cursor-pointer brightness-200 hover:scale-105 transition-transform' />
+						<LogoImage className='w-10 lg:w-14 cursor-pointer brightness-200 hover:scale-105 transition-transform' />
 					</div>
 
 					{/* 2. Search Bar (Premium Look) */}
@@ -264,7 +264,7 @@ const Header = () => {
 							>
 								<FiMenu className='text-2xl text-white' />
 							</button>
-							<LogoImage className='!w-[32px] brightness-200' />
+							<LogoImage className='w-10 lg:w-14 brightness-200' />
 						</div>
 						<div
 							onClick={onOpenCart}
