@@ -57,6 +57,8 @@ export const splitText = (text: string) => {
 export const CompanyName = "Bluzett Systems limited";
 export const CompanyShortName = "Bluzett";
 
+
+
 export const statusStyles: { [key: string]: string } = {
 	completed: "text-emerald-500",
 	"on-hold": "text-yellow-500",
