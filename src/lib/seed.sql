@@ -6,7 +6,7 @@
 -- ── 1. Categories ───────────────────────────────────────────
 
 -- Parent categories
-INSERT INTO bluzett_categories (name, slug, description, parent_id, image_url, count) VALUES
+INSERT INTO bluzettSystem_categories (name, slug, description, parent_id, image_url, count) VALUES
   ('Software & Apps',     'software-apps',      'Pro-grade applications and utility software',      NULL, 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800', 0),
   ('Design Assets',       'design-assets',      'Premium UI kits, fonts, and graphic templates',    NULL, 'https://images.unsplash.com/photo-1586717791821-3f44a563dc4c?w=800', 0),
   ('Development Tools',   'dev-tools',          'API kits, scripts, and coding frameworks',         NULL, 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800', 0),
@@ -16,17 +16,17 @@ INSERT INTO bluzett_categories (name, slug, description, parent_id, image_url, c
 ON CONFLICT (slug) DO NOTHING;
 
 -- Sub-categories
-INSERT INTO bluzett_categories (name, slug, description, parent_id, image_url, count)
+INSERT INTO bluzettSystem_categories (name, slug, description, parent_id, image_url, count)
 SELECT 'UI Kits & Templates', 'ui-templates', 'Figma and Webflow design systems', id, 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=400', 0
-FROM bluzett_categories WHERE slug = 'design-assets' ON CONFLICT (slug) DO NOTHING;
+FROM bluzettSystem_categories WHERE slug = 'design-assets' ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO bluzett_categories (name, slug, description, parent_id, image_url, count)
+INSERT INTO bluzettSystem_categories (name, slug, description, parent_id, image_url, count)
 SELECT 'Programming Courses', 'code-courses', 'Learn React, Node, and Python', id, 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400', 0
-FROM bluzett_categories WHERE slug = 'digital-courses' ON CONFLICT (slug) DO NOTHING;
+FROM bluzettSystem_categories WHERE slug = 'digital-courses' ON CONFLICT (slug) DO NOTHING;
 
 -- ── 2. Products (30 Items) ──────────────────────────────────
 
-INSERT INTO bluzett_products (name, slug, sku, description, short_description, price, regular_price, sale_price, stock_status, stock_quantity, rating_count, average_rating, status) VALUES
+INSERT INTO bluzettSystem_products (name, slug, sku, description, short_description, price, regular_price, sale_price, stock_status, stock_quantity, rating_count, average_rating, status) VALUES
 -- Software
 ('Nestora CRM Pro', 'nestora-crm-pro', 'SFT-CRM-01', 'Cloud-based customer relationship management tool with automated lead tracking and high-velocity sales pipelines.', 'Complete SAAS CRM for growing sales teams', 125000, 150000, 125000, 'instock', 999, 45, 4.80, 'publish'),
 ('Cyber Shield VPN', 'cyber-shield-vpn', 'SFT-VPN-02', 'Secure your digital presence with 256-bit encryption. Access servers in 90+ countries with no speed throttling.', 'Ultimate privacy software for anonymous browsing', 15000, 15000, 0, 'instock', 999, 112, 4.75, 'publish'),
@@ -72,36 +72,36 @@ ON CONFLICT (slug) DO NOTHING;
 
 -- ── 3. Images (Digital Presentation Styles) ──────────────────
 
-INSERT INTO bluzett_product_images (product_id, src, name, alt, position)
-SELECT id, 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000', 'CRM Screenshot', 'Dashboard Visualization', 0 FROM bluzett_products WHERE slug = 'nestora-crm-pro' UNION ALL
-SELECT id, 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1000', 'Coding Screen', 'Programming Bootcamp Preview', 0 FROM bluzett_products WHERE slug = 'react-mastery-course' UNION ALL
-SELECT id, 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1000', 'Design Abstract', 'UI Design System Components', 0 FROM bluzett_products WHERE slug = 'ultra-ui-kit' UNION ALL
-SELECT id, 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1000', 'API Code', 'Development Firewall Script', 0 FROM bluzett_products WHERE slug = 'api-firewall' UNION ALL
-SELECT id, 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=1000', 'Saas Platform', 'Enterprise Subscriptions View', 0 FROM bluzett_products WHERE slug = 'web-hosting-pro'
+INSERT INTO bluzettSystem_product_images (product_id, src, name, alt, position)
+SELECT id, 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000', 'CRM Screenshot', 'Dashboard Visualization', 0 FROM bluzettSystem_products WHERE slug = 'nestora-crm-pro' UNION ALL
+SELECT id, 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1000', 'Coding Screen', 'Programming Bootcamp Preview', 0 FROM bluzettSystem_products WHERE slug = 'react-mastery-course' UNION ALL
+SELECT id, 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1000', 'Design Abstract', 'UI Design System Components', 0 FROM bluzettSystem_products WHERE slug = 'ultra-ui-kit' UNION ALL
+SELECT id, 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1000', 'API Code', 'Development Firewall Script', 0 FROM bluzettSystem_products WHERE slug = 'api-firewall' UNION ALL
+SELECT id, 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=1000', 'Saas Platform', 'Enterprise Subscriptions View', 0 FROM bluzettSystem_products WHERE slug = 'web-hosting-pro'
 ON CONFLICT DO NOTHING;
 
 -- ── 4. Attributes (Digital Specs) ────────────────────────────
 
-INSERT INTO bluzett_product_attributes (product_id, name, options, position)
-SELECT id, 'License Tier', ARRAY['Single User', 'Business (5 Users)', 'Enterprise'], 0 FROM bluzett_products WHERE slug = 'nestora-crm-pro' ON CONFLICT DO NOTHING;
+INSERT INTO bluzettSystem_product_attributes (product_id, name, options, position)
+SELECT id, 'License Tier', ARRAY['Single User', 'Business (5 Users)', 'Enterprise'], 0 FROM bluzettSystem_products WHERE slug = 'nestora-crm-pro' ON CONFLICT DO NOTHING;
 
-INSERT INTO bluzett_product_attributes (product_id, name, options, position)
-SELECT id, 'File Format', ARRAY['Figma', 'Sketch', 'Adobe XD'], 0 FROM bluzett_products WHERE slug = 'ultra-ui-kit' ON CONFLICT DO NOTHING;
+INSERT INTO bluzettSystem_product_attributes (product_id, name, options, position)
+SELECT id, 'File Format', ARRAY['Figma', 'Sketch', 'Adobe XD'], 0 FROM bluzettSystem_products WHERE slug = 'ultra-ui-kit' ON CONFLICT DO NOTHING;
 
-INSERT INTO bluzett_product_attributes (product_id, name, options, position)
-SELECT id, 'Course Language', ARRAY['English', 'Spanish', 'French'], 0 FROM bluzett_products WHERE slug = 'react-mastery-course' ON CONFLICT DO NOTHING;
+INSERT INTO bluzettSystem_product_attributes (product_id, name, options, position)
+SELECT id, 'Course Language', ARRAY['English', 'Spanish', 'French'], 0 FROM bluzettSystem_products WHERE slug = 'react-mastery-course' ON CONFLICT DO NOTHING;
 
 -- ── 5. Category Linking ───────────────────────────────────────
 
-INSERT INTO bluzett_product_categories (product_id, category_id)
-SELECT p.id, c.id FROM bluzett_products p, bluzett_categories c 
+INSERT INTO bluzettSystem_product_categories (product_id, category_id)
+SELECT p.id, c.id FROM bluzettSystem_products p, bluzettSystem_categories c 
 WHERE p.slug = 'nestora-crm-pro' AND c.slug IN ('software-apps') UNION ALL
-SELECT p.id, c.id FROM bluzett_products p, bluzett_categories c 
+SELECT p.id, c.id FROM bluzettSystem_products p, bluzettSystem_categories c 
 WHERE p.slug = 'ultra-ui-kit' AND c.slug IN ('design-assets', 'ui-templates') UNION ALL
-SELECT p.id, c.id FROM bluzett_products p, bluzett_categories c 
+SELECT p.id, c.id FROM bluzettSystem_products p, bluzettSystem_categories c 
 WHERE p.slug = 'react-mastery-course' AND c.slug IN ('digital-courses', 'code-courses')
 ON CONFLICT DO NOTHING;
 
 -- ── 6. Final Sync ───────────────────────────────────────────
 
-UPDATE bluzett_categories c SET count = (SELECT COUNT(*) FROM bluzett_product_categories pc WHERE pc.category_id = c.id);
+UPDATE bluzettSystem_categories c SET count = (SELECT COUNT(*) FROM bluzettSystem_product_categories pc WHERE pc.category_id = c.id);

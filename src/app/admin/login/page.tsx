@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
 									setForm((f) => ({ ...f, username: e.target.value }))
 								}
 								required
-								className='w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-transparent'
+								className='w-full px-4 py-2.5 border text-black border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-transparent'
 								placeholder='Enter username or email'
 							/>
 						</div>
@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
 									setForm((f) => ({ ...f, password: e.target.value }))
 								}
 								required
-								className='w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-transparent'
+								className='w-full px-4 py-2.5 border text-black border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-transparent'
 								placeholder='Enter password'
 							/>
 						</div>
