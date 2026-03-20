@@ -1,13 +1,13 @@
 /**
  * Centralised table-name registry.
  *
- * The prefix is read from the TABLE_PREFIX environment variable (default: "bluzettSystem_").
+ * The prefix is read from the TABLE_PREFIX environment variable (default: "bluzett_").
  * Set TABLE_PREFIX in your .env file to change it for every table at once.
  *
  * Example .env entry:
- *   TABLE_PREFIX=bluzettSystem_
+ *   TABLE_PREFIX=bluzett_
  */
-const prefix = process.env.TABLE_PREFIX ?? "bluzettSystem_";
+const prefix = process.env.TABLE_PREFIX ?? "bluzett_";
 
 export const T = {
 	users: `${prefix}users`,

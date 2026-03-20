@@ -1,11 +1,11 @@
 -- ============================================================
 -- bluzett E-Commerce PostgreSQL Schema
 -- Replaces WooCommerce as the data source
--- All table names use the "bluzettSystem_" prefix (matches TABLE_PREFIX in .env)
+-- All table names use the "bluzett_" prefix (matches TABLE_PREFIX in .env)
 -- ============================================================
 
 -- Users / Customers
-CREATE TABLE IF NOT EXISTS bluzettSystem_users (
+CREATE TABLE IF NOT EXISTS bluzett_users (
   id               SERIAL PRIMARY KEY,
   first_name       VARCHAR(100) NOT NULL DEFAULT '',
   last_name        VARCHAR(100) NOT NULL DEFAULT '',
@@ -29,12 +29,12 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_users (
 );
 
 -- Product Categories
-CREATE TABLE IF NOT EXISTS bluzettSystem_categories (
+CREATE TABLE IF NOT EXISTS bluzett_categories (
   id          SERIAL PRIMARY KEY,
   name        VARCHAR(255) NOT NULL,
   slug        VARCHAR(255) UNIQUE NOT NULL,
   description TEXT,
-  parent_id   INTEGER REFERENCES bluzettSystem_categories(id) ON DELETE SET NULL,
+  parent_id   INTEGER REFERENCES bluzett_categories(id) ON DELETE SET NULL,
   image_url   TEXT,
   count       INTEGER NOT NULL DEFAULT 0,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_categories (
 );
 
 -- Products
-CREATE TABLE IF NOT EXISTS bluzettSystem_products (
+CREATE TABLE IF NOT EXISTS bluzett_products (
   id                SERIAL PRIMARY KEY,
   name              VARCHAR(500) NOT NULL,
   slug              VARCHAR(500) UNIQUE NOT NULL,
@@ -63,9 +63,9 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_products (
 );
 
 -- Product Images
-CREATE TABLE IF NOT EXISTS bluzettSystem_product_images (
+CREATE TABLE IF NOT EXISTS bluzett_product_images (
   id          SERIAL PRIMARY KEY,
-  product_id  INTEGER NOT NULL REFERENCES bluzettSystem_products(id) ON DELETE CASCADE,
+  product_id  INTEGER NOT NULL REFERENCES bluzett_products(id) ON DELETE CASCADE,
   src         TEXT NOT NULL,
   name        VARCHAR(255),
   alt         TEXT,
@@ -74,25 +74,25 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_product_images (
 );
 
 -- Product ↔ Category (many-to-many)
-CREATE TABLE IF NOT EXISTS bluzettSystem_product_categories (
-  product_id   INTEGER NOT NULL REFERENCES bluzettSystem_products(id) ON DELETE CASCADE,
-  category_id  INTEGER NOT NULL REFERENCES bluzettSystem_categories(id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS bluzett_product_categories (
+  product_id   INTEGER NOT NULL REFERENCES bluzett_products(id) ON DELETE CASCADE,
+  category_id  INTEGER NOT NULL REFERENCES bluzett_categories(id) ON DELETE CASCADE,
   PRIMARY KEY (product_id, category_id)
 );
 
 -- Product Attributes (e.g. Color, Size, Brand)
-CREATE TABLE IF NOT EXISTS bluzettSystem_product_attributes (
+CREATE TABLE IF NOT EXISTS bluzett_product_attributes (
   id          SERIAL PRIMARY KEY,
-  product_id  INTEGER NOT NULL REFERENCES bluzettSystem_products(id) ON DELETE CASCADE,
+  product_id  INTEGER NOT NULL REFERENCES bluzett_products(id) ON DELETE CASCADE,
   name        VARCHAR(255) NOT NULL,
   options     TEXT[] NOT NULL DEFAULT '{}',
   position    INTEGER NOT NULL DEFAULT 0
 );
 
 -- Orders
-CREATE TABLE IF NOT EXISTS bluzettSystem_orders (
+CREATE TABLE IF NOT EXISTS bluzett_orders (
   id                    SERIAL PRIMARY KEY,
-  customer_id           INTEGER REFERENCES bluzettSystem_users(id) ON DELETE SET NULL,
+  customer_id           INTEGER REFERENCES bluzett_users(id) ON DELETE SET NULL,
   status                VARCHAR(50) NOT NULL DEFAULT 'pending',
   currency              VARCHAR(10) NOT NULL DEFAULT 'NGN',
   total                 DECIMAL(14,2) NOT NULL DEFAULT 0,
@@ -112,10 +112,10 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_orders (
 );
 
 -- Order Line Items
-CREATE TABLE IF NOT EXISTS bluzettSystem_order_items (
+CREATE TABLE IF NOT EXISTS bluzett_order_items (
   id          SERIAL PRIMARY KEY,
-  order_id    INTEGER NOT NULL REFERENCES bluzettSystem_orders(id) ON DELETE CASCADE,
-  product_id  INTEGER REFERENCES bluzettSystem_products(id) ON DELETE SET NULL,
+  order_id    INTEGER NOT NULL REFERENCES bluzett_orders(id) ON DELETE CASCADE,
+  product_id  INTEGER REFERENCES bluzett_products(id) ON DELETE SET NULL,
   name        VARCHAR(500) NOT NULL,
   quantity    INTEGER NOT NULL DEFAULT 1,
   price       DECIMAL(14,2) NOT NULL,
@@ -125,10 +125,10 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_order_items (
 );
 
 -- Paylater Requests
-CREATE TABLE IF NOT EXISTS bluzettSystem_paylater_requests (
+CREATE TABLE IF NOT EXISTS bluzett_paylater_requests (
   id          SERIAL PRIMARY KEY,
-  customer_id INTEGER REFERENCES bluzettSystem_users(id) ON DELETE CASCADE,
-  product_id  INTEGER REFERENCES bluzettSystem_products(id) ON DELETE SET NULL,
+  customer_id INTEGER REFERENCES bluzett_users(id) ON DELETE CASCADE,
+  product_id  INTEGER REFERENCES bluzett_products(id) ON DELETE SET NULL,
   status      VARCHAR(50) NOT NULL DEFAULT 'pending',
   payment     JSONB NOT NULL DEFAULT '[]',
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_paylater_requests (
 );
 
 -- Hero / Promotional Banners
-CREATE TABLE IF NOT EXISTS bluzettSystem_banners (
+CREATE TABLE IF NOT EXISTS bluzett_banners (
   id          SERIAL PRIMARY KEY,
   name        VARCHAR(255),
   image_url   TEXT NOT NULL,
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_banners (
 );
 
 -- Global Store Settings (key-value)
-CREATE TABLE IF NOT EXISTS bluzettSystem_global_settings (
+CREATE TABLE IF NOT EXISTS bluzett_global_settings (
   id          SERIAL PRIMARY KEY,
   key         VARCHAR(255) UNIQUE NOT NULL,
   value       TEXT,
@@ -156,9 +156,9 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_global_settings (
 );
 
 -- Product Reviews
-CREATE TABLE IF NOT EXISTS bluzettSystem_reviews (
+CREATE TABLE IF NOT EXISTS bluzett_reviews (
   id          SERIAL PRIMARY KEY,
-  product_id  INTEGER NOT NULL REFERENCES bluzettSystem_products(id) ON DELETE CASCADE,
+  product_id  INTEGER NOT NULL REFERENCES bluzett_products(id) ON DELETE CASCADE,
   reviewer    VARCHAR(255) NOT NULL,
   email       VARCHAR(255),
   rating      INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
@@ -168,20 +168,20 @@ CREATE TABLE IF NOT EXISTS bluzettSystem_reviews (
 );
 
 -- ── Indexes ──────────────────────────────────────────────────
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_products_status        ON bluzettSystem_products(status);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_products_stock_status  ON bluzettSystem_products(stock_status);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_product_images_product ON bluzettSystem_product_images(product_id, position);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_product_cat_product    ON bluzettSystem_product_categories(product_id);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_product_cat_category   ON bluzettSystem_product_categories(category_id);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_orders_customer        ON bluzettSystem_orders(customer_id);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_orders_status          ON bluzettSystem_orders(status);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_order_items_order      ON bluzettSystem_order_items(order_id);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_categories_parent      ON bluzettSystem_categories(parent_id);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_categories_slug        ON bluzettSystem_categories(slug);
-CREATE INDEX IF NOT EXISTS idx_bluzettSystem_reviews_product        ON bluzettSystem_reviews(product_id);
+CREATE INDEX IF NOT EXISTS idx_bluzett_products_status        ON bluzett_products(status);
+CREATE INDEX IF NOT EXISTS idx_bluzett_products_stock_status  ON bluzett_products(stock_status);
+CREATE INDEX IF NOT EXISTS idx_bluzett_product_images_product ON bluzett_product_images(product_id, position);
+CREATE INDEX IF NOT EXISTS idx_bluzett_product_cat_product    ON bluzett_product_categories(product_id);
+CREATE INDEX IF NOT EXISTS idx_bluzett_product_cat_category   ON bluzett_product_categories(category_id);
+CREATE INDEX IF NOT EXISTS idx_bluzett_orders_customer        ON bluzett_orders(customer_id);
+CREATE INDEX IF NOT EXISTS idx_bluzett_orders_status          ON bluzett_orders(status);
+CREATE INDEX IF NOT EXISTS idx_bluzett_order_items_order      ON bluzett_order_items(order_id);
+CREATE INDEX IF NOT EXISTS idx_bluzett_categories_parent      ON bluzett_categories(parent_id);
+CREATE INDEX IF NOT EXISTS idx_bluzett_categories_slug        ON bluzett_categories(slug);
+CREATE INDEX IF NOT EXISTS idx_bluzett_reviews_product        ON bluzett_reviews(product_id);
 
 -- ── Default Global Settings ───────────────────────────────────
-INSERT INTO bluzettSystem_global_settings (key, value) VALUES
+INSERT INTO bluzett_global_settings (key, value) VALUES
   ('shop_name',           'bluzett'),
   ('company_name',        'bluzett Technologies Limited'),
   ('address',             'Nigeria'),
